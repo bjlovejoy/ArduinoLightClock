@@ -1,0 +1,6 @@
+#ifndef extraFunctions_h
+#define extraFunctions_h
+
+const unsigned char lovejoy_inventions_bitmap[] PROGMEM;
+
+#endif

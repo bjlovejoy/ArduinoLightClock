@@ -1,0 +1,23 @@
+Used IRrecvDemo.ino
+
+FFA25D       power
+FF629D       vol+
+FFE21D       func/stop
+FF22DD       <<
+FF02FD       play
+FFC23D       >>
+FFE01F       down
+FFA857       vol-
+FF906F       up
+C101E57B     0
+FF9867       EQ
+FFB04F       ST/REPT
+FF30CF       1
+FF18E7       2
+FF7A85       3
+FF10EF       4
+FF38C7       5
+FF5AA5       6
+FF42BD       7
+FF4AB5       8
+3EC3FC1B     9
