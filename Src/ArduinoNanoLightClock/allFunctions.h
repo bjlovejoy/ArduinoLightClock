@@ -11,12 +11,19 @@
 
 
 
-
-
-
-
-
-
+void alarmTone(byte pin, uint16_t frequency, uint16_t duration)
+{ // input parameters: Arduino pin number, frequency in Hz, duration in milliseconds
+  unsigned long startTime=millis();
+  unsigned long halfPeriod= 1000000L/frequency/2;
+  while (millis()-startTime< duration)
+  {
+    digitalWrite(pin,HIGH);
+    delayMicroseconds(halfPeriod);
+    digitalWrite(pin,LOW);
+    delayMicroseconds(halfPeriod);
+  }
+  pinMode(pin,INPUT);
+}
 
 
 struct
