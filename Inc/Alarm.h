@@ -1,7 +1,7 @@
 #ifndef __ALARM_H
 #define __ALARM_H
 
-#include 
+#include "SimpleDHT.h"
 
 class Alarm
 {

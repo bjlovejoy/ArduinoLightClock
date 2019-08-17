@@ -8,17 +8,20 @@
 #include "IRremote.h"
 #include "SimpleDHT.h"
 
-#define CLK 7
-#define DIO 8
+#define STARTUP_MODE 0
+#define RUNNING_MODE 1
+#define PROGRAMMING_MODE 2
+#define ERROR_MODE 3
 
 class ArduinoClock
 {
 	private:
-		TM1637Display digitDisplay(CLK, DIO);
-		RTC_DS3231 rtc;
+		uint8_t state;
+		uint8_t errorCode;
 	
 	public:
 		ArduinoClock();
+		void stateMachine();
 };
 
 

@@ -10,9 +10,9 @@
 
 
 
-
+// input parameters: Arduino pin number, frequency in Hz, duration in milliseconds
 void alarmTone(byte pin, uint16_t frequency, uint16_t duration)
-{ // input parameters: Arduino pin number, frequency in Hz, duration in milliseconds
+{
   unsigned long startTime=millis();
   unsigned long halfPeriod= 1000000L/frequency/2;
   while (millis()-startTime< duration)
@@ -37,9 +37,10 @@ struct
   unsigned long down = 16769055;       //down triangle
   unsigned long timeDown = 16754775;   //volume down
   unsigned long up = 16748655;         //up triangle
-  unsigned long num0 = 3238126971;
   unsigned long eq = 16750695;
   unsigned long rept = 16756815;
+  
+  unsigned long num0 = 3238126971;
   unsigned long num1 = 16724175;       //alarm 1
   unsigned long num2 = 16718055;       //alarm 2
   unsigned long num3 = 16743045;       //alarm 3
