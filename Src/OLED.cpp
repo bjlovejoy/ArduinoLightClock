@@ -151,6 +151,9 @@ void OLED::updateProgDay()
 	//screen.writeFillRect(30, 49, 32, 15, 2);  //Sa
 	//screen.writeFillRect(65, 49, 32, 15, 2);  //Su
 	
+	//consider empty fill box when making selection
+	//left and right movement only
+	
 	screen.display();
 }
 
@@ -231,6 +234,31 @@ void OLED::updateProgLight()
 	screen.display();
 }
 
+void OLED::updateProgLight2()
+{
+	screen.setTextSize(2);      // Normal 1:1 pixel scale
+	screen.setTextColor(WHITE); // Draw white text
+	screen.cp437(true);         // Use full 256 char 'Code Page 437' font
+	screen.setCursor(0, 0);     // Start at top-left corner
+
+	int num = 2;
+	delay(500);
+	screen.clearDisplay();
+
+	screen.setCursor(8, 20);
+	screen.print(F("< COLOR >"));
+	screen.setCursor(2, 45);
+	screen.print(F("< BRIGHT >"));
+	//screen.print(F("  BRIGHT >"));
+	//screen.print(F("< BRIGHT"));
+
+
+	//screen.writeFillRect(0, 16, 127, 22, 2);  //color
+	//screen.writeFillRect(0, 41, 127, 22, 2);  //bright
+
+	screen.display();
+}
+
 void OLED::updateProgBuzzer()
 {
 	screen.setTextSize(1);      // Normal 1:1 pixel scale
@@ -274,5 +302,41 @@ void OLED::updateProgBuzzer()
 	//screen.writeFillRect(64, 50, 12, 10, 2);  //8
 
 	screen.display();
+}
+
+void OLED::updateProgBuzzer2()
+{
+	screen.setTextSize(2);      // Normal 1:1 pixel scale
+	screen.setTextColor(WHITE); // Draw white text
+	screen.cp437(true);         // Use full 256 char 'Code Page 437' font
+	screen.setCursor(0, 0);     // Start at top-left corner
+
+	int num = 2;
+	delay(500);
+	screen.clearDisplay();
+
+	screen.setCursor(8, 30);
+	screen.print(F("< PITCH >"));
+	//screen.print(F("  PITCH >"));
+	//screen.print(F("< PITCH"));
+
+	screen.writeFillRect(0, 26, 127, 22, 2);  //color
+
+	screen.display();
+}
+
+void updateProgDate()
+{
+
+}
+
+void updateProgNightLight()
+{
+
+}
+
+void updateProgBrightness()
+{
+
 }
 

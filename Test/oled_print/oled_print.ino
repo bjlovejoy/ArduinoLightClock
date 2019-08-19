@@ -39,7 +39,7 @@ void setup()
     for(;;); // Don't proceed, loop forever
   }
   
-  screen.setTextSize(1);      // Normal 1:1 pixel scale
+  screen.setTextSize(2);      // Normal 1:1 pixel scale
   screen.setTextColor(WHITE); // Draw white text
   screen.cp437(true);         // Use full 256 char 'Code Page 437' font
   screen.setCursor(0, 0);     // Start at top-left corner
@@ -47,37 +47,13 @@ void setup()
   int num = 2;
   delay(500);
   screen.clearDisplay();
-  screen.writeFillRect(0, 11, 128, 2, 1);
-  screen.print(F("Alarm "));
-  screen.print(num);
-  screen.print(F(" - Buzzer"));
 
-  screen.setCursor(0, 16);
-  screen.print(F("1) Off"));
-  screen.setCursor(0, 28);
-  screen.print(F("2) Beep"));
-  screen.setCursor(0, 40);
-  screen.print(F("3) Beepx2"));
-  screen.setCursor(0, 52);
-  screen.print(F("4) Beepx3"));
+  screen.setCursor(8, 30);
+  screen.print(F("< PITCH >"));
+  //screen.print(F("  PITCH >"));
+  //screen.print(F("< PITCH"));
 
-  screen.setCursor(65, 16);
-  screen.print(F("5) Fast"));
-  screen.setCursor(65, 28);
-  screen.print(F("6) Range"));
-  screen.setCursor(65, 40);
-  screen.print(F("7) Tune 1"));
-  screen.setCursor(65, 52);
-  screen.print(F("8) Tune 2"));
-
-  //screen.writeFillRect(0, 16, 12, 10, 2);  //1
-  //screen.writeFillRect(0, 27, 12, 10, 2);  //2
-  //screen.writeFillRect(0, 38, 12, 10, 2);  //3
-  //screen.writeFillRect(0, 50, 12, 10, 2);  //4
-  //screen.writeFillRect(64, 16, 12, 10, 2);  //5
-  //screen.writeFillRect(64, 27, 12, 10, 2);  //6
-  //screen.writeFillRect(64, 38, 12, 10, 2);  //7
-  //screen.writeFillRect(64, 50, 12, 10, 2);  //8
+  screen.writeFillRect(0, 26, 127, 22, 2);  //color
 
   screen.display();
 }

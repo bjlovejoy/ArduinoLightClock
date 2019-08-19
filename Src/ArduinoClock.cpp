@@ -15,29 +15,34 @@
 
 ArduinoClock::ArduinoClock()
 {
-	Alarm AC_alarm1;
-	Buzzer AC_alarm2;
-	LED AC_alarm3;
-	MyRemote AC_buzzer;
-	OLED AC_led;
-	RTCModule AC_remote;
-	AC_oled;
-	AC_rtc;
-	AC_7seg;
-	AC_temp;
-	AC_;
+
 }
 
 void ArduinoClock::stateMachine()
 {
 	if(state == RUNNING_MODE)
 	{
-		;
+		//collect time and date
+		
+		if(AC_alarm1.alarmOn && AC_alarm1.alarmTime == currentTime)  //&& AC_alarm1.alarmDate == currentDay
+		{
+			;
+		}
+		else if(AC_alarm2.alarmOn && AC_alarm2.alarmTime == currentTime)
+		{
+			;
+		}
+		else if(AC_alarm3.alarmOn && AC_alarm3.alarmTime == currentTime)
+		{
+			;
+		}
 	}
+	
 	else if(state == PROGRAMMING_MODE)
 	{
 		;
 	}
+	
 	else if(state == STARTUP_MODE)
 	{
 		if(AC_remote.findError())
@@ -59,6 +64,7 @@ void ArduinoClock::stateMachine()
 			return;
 		}
 	}
+	
 	else if(state == ERROR_MODE)
 	{
 		;

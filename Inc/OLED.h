@@ -27,7 +27,9 @@ class OLED
 		void updateProgDay();
 		void updateProgTime();
 		void updateProgLight();
+		void updateProgLight2();
 		void updateProgBuzzer();
+		void updateProgBuzzer2();
 		
 		void updateProgDate();
 		void updateProgNightLight();

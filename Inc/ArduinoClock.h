@@ -18,6 +18,19 @@ class ArduinoClock
 	private:
 		uint8_t state;
 		uint8_t errorCode;
+		uint16_t currentTime;
+		uint16_t currentDay;
+		
+		Alarm AC_alarm1;
+		Alarm AC_alarm2;
+		Alarm AC_alarm3;
+		Buzzer AC_buzzer;
+		LED AC_led;
+		MyRemote AC_remote;
+		OLED AC_oled;
+		RTCModule AC_rtc;
+		SevenSeg AC_7seg;
+		TempHumidity AC_temp;
 	
 	public:
 		ArduinoClock();
