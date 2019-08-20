@@ -43,7 +43,7 @@ void OLED::updateRunning()
 }
 
 //dir will be controller input for number or up/down, set to zero for first round through to highlight none of them
-void OLED::updateProgMenu(uint8_t dir)
+uint8_t OLED::updateProgMenu(bool dirInput)
 {
 	screen.setTextSize(1);      // Normal 1:1 pixel scale
 	screen.setTextColor(WHITE); // Draw white text
@@ -66,6 +66,15 @@ void OLED::updateProgMenu(uint8_t dir)
 	screen.setCursor(0, 56);
 	screen.print(F("5) Brightness"));
 	
+	if(dirInput)	//if up, move up
+		--dir;
+	else			//if down, move down
+		++dir;
+	if(dir < 1)		//range checking
+		dir = 1;
+	else if (dir > 5)
+		dir = 5;
+
 	if(dir == 1)
 		screen.writeFillRect(0, 16, 128, 9, 2);
 	if(dir == 2)
@@ -78,6 +87,7 @@ void OLED::updateProgMenu(uint8_t dir)
 		screen.writeFillRect(0, 55, 128, 9, 2);
 
 	screen.display();
+	return dir;
 }
 
 void OLED::updateProgAlarm()  //instead of programming empty ones to say "NONE", set to Monday at 7 am

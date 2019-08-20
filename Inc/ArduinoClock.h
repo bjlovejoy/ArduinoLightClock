@@ -18,8 +18,11 @@ class ArduinoClock
 	private:
 		uint8_t state;
 		uint8_t errorCode;
+		uint8_t pos;
 		uint16_t currentTime;
 		uint16_t currentDay;
+		
+		bool remoteInputAvailable;
 		
 		Alarm AC_alarm1;
 		Alarm AC_alarm2;
