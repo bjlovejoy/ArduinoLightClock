@@ -20,6 +20,7 @@ Arduino Remote (Elegoo)
 
 (If you don't have or don't wish to include any of the above modules (such as the DHT module), follow the comments in the main Arduino file to remove them).
 
+Hi Alex
 
 **Important Notes:**
 This code was initially written for the Arduino Nano and then converted for the Arduino Pro Micro.  I have included links to the Amazon pages I bought them from.  I included code for the Arduino Uno, however it is mostly similar to the code for the Nano.
