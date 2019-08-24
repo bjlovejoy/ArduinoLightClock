@@ -8,7 +8,7 @@ OLED::OLED()
 	Serial.begin(9600);
 
 	// SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-	if(!screen.begin(SSD1306_SWITCHCAPVCC, 0x3C))  // Address 0x3D for 128x64
+	if(!screen_.begin(SSD1306_SWITCHCAPVCC, 0x3C))  // Address 0x3D for 128x64
 	{
 		Serial.println(F("SSD1306 allocation failed"));
 		for(;;); // Don't proceed, loop forever
@@ -17,322 +17,332 @@ OLED::OLED()
 
 void OLED::clearAll()
 {
-	screen.clearDisplay();
+	screen_.clearDisplay();
 }
+
+
+uint8_t getSelection()
+{
+	return selection;
+}
+
 
 void OLED::updateRunning()
 {
-	screen.setTextSize(2);      // Normal 1:1 pixel scale
-	screen.setTextColor(WHITE); // Draw white text
-	screen.cp437(true);         // Use full 256 char 'Code Page 437' font
-	screen.setCursor(0, 0);     // Start at top-left corner
+	screen_.setTextSize(2);      // Normal 1:1 pixel scale
+	screen_.setTextColor(WHITE); // Draw white text
+	screen_.cp437(true);         // Use full 256 char 'Code Page 437' font
+	screen_.setCursor(0, 0);     // Start at top-left corner
 
 	delay(500);
-	screen.clearDisplay();
+	screen_.clearDisplay();
 
-	screen.print(F("AM"));
-	screen.drawBitmap(50, 0, alarm_bell, 17, 16, 1);
-	screen.setCursor(75, 0);
-	screen.print(F("1"));
-	screen.setCursor(95, 0);
-	screen.print(F("2"));
-	screen.setCursor(115, 0);
-	screen.print(F("3"));
+	screen_.print(F("AM"));
+	screen_.drawBitmap(50, 0, alarm_bell, 17, 16, 1);
+	screen_.setCursor(75, 0);
+	screen_.print(F("1"));
+	screen_.setCursor(95, 0);
+	screen_.print(F("2"));
+	screen_.setCursor(115, 0);
+	screen_.print(F("3"));
 	
-	screen.display();
+	screen_.display();
 }
 
-//dir will be controller input for number or up/down, set to zero for first round through to highlight none of them
-uint8_t OLED::updateProgMenu(bool dirInput)
+//dir_ will be controller input for number or up/down, set to zero for first round through to highlight none of them
+uint8_t OLED::updateProgMenu(uint8_t dirInput)
 {
-	screen.setTextSize(1);      // Normal 1:1 pixel scale
-	screen.setTextColor(WHITE); // Draw white text
-	screen.cp437(true);         // Use full 256 char 'Code Page 437' font
-	screen.setCursor(15, 0);     // Start at top-left corner
+	screen_.setTextSize(1);      // Normal 1:1 pixel scale
+	screen_.setTextColor(WHITE); // Draw white text
+	screen_.cp437(true);         // Use full 256 char 'Code Page 437' font
+	screen_.setCursor(15, 0);     // Start at top-left corner
 
 	delay(500);
-	screen.clearDisplay();
-	screen.writeFillRect(0, 11, 128, 2, 1);
-	screen.print(F("Programming Mode"));
-	screen.setCursor(0, 16);
-	screen.print(F("1) Alarms"));
+	screen_.clearDisplay();
+	screen_.writeFillRect(0, 11, 128, 2, 1);
+	screen_.print(F("Programming Mode"));
+	screen_.setCursor(0, 16);
+	screen_.print(F("1) Alarms"));
 
-	screen.setCursor(0, 26);
-	screen.print(F("2) Time"));
-	screen.setCursor(0, 36);
-	screen.print(F("3) Date"));
-	screen.setCursor(0, 46);
-	screen.print(F("4) Night Light"));
-	screen.setCursor(0, 56);
-	screen.print(F("5) Brightness"));
+	screen_.setCursor(0, 26);
+	screen_.print(F("2) Time"));
+	screen_.setCursor(0, 36);
+	screen_.print(F("3) Date"));
+	screen_.setCursor(0, 46);
+	screen_.print(F("4) Night Light"));
+	screen_.setCursor(0, 56);
+	screen_.print(F("5) Brightness"));
 	
-	if(dirInput)	//if up, move up
-		--dir;
-	else			//if down, move down
-		++dir;
-	if(dir < 1)		//range checking
-		dir = 1;
-	else if (dir > 5)
-		dir = 5;
+	if(dirInput == 13)							//move up
+		--dir_;
+	else if(dirInput == 11)						//move down
+		++dir_;
+	else if(dirInput >= 1 || dirInput <= 5)		//set to number
+		dir_ == dirInput;
 
-	if(dir == 1)
-		screen.writeFillRect(0, 16, 128, 9, 2);
-	if(dir == 2)
-		screen.writeFillRect(0, 25, 128, 9, 2);
-	if(dir == 3)
-		screen.writeFillRect(0, 35, 128, 9, 2);
-	if(dir == 4)
-		screen.writeFillRect(0, 45, 128, 10, 2);
-	if(dir == 5)
-		screen.writeFillRect(0, 55, 128, 9, 2);
+	if(dir_ < 1)		//range checking, wrap around
+		dir_ = 5;
+	else if (dir_ > 5)
+		dir_ = 1;
 
-	screen.display();
-	return dir;
+	if(dir_ == 1)
+		screen_.writeFillRect(0, 16, 128, 9, 2);
+	if(dir_ == 2)
+		screen_.writeFillRect(0, 25, 128, 9, 2);
+	if(dir_ == 3)
+		screen_.writeFillRect(0, 35, 128, 9, 2);
+	if(dir_ == 4)
+		screen_.writeFillRect(0, 45, 128, 10, 2);
+	if(dir_ == 5)
+		screen_.writeFillRect(0, 55, 128, 9, 2);
+
+	screen_.display();
+	return dir_;
 }
 
 void OLED::updateProgAlarm()  //instead of programming empty ones to say "NONE", set to Monday at 7 am
 {
-	screen.setTextSize(2);
-	screen.setTextColor(WHITE);
-	screen.cp437(true);
-	screen.setCursor(0, 0);
+	screen_.setTextSize(2);
+	screen_.setTextColor(WHITE);
+	screen_.cp437(true);
+	screen_.setCursor(0, 0);
 
 	int num = 2;   //start with alarm 1, then shift through all info
 	delay(500);
-	screen.clearDisplay();
-	screen.print(F("< Alarm"));
-	screen.print((num));
-	screen.print(F(" >"));
+	screen_.clearDisplay();
+	screen_.print(F("< Alarm"));
+	screen_.print((num));
+	screen_.print(F(" >"));
 
-	screen.setTextSize(1);  //print days and time (unique input based on alarm 1, 2 or 3)
+	screen_.setTextSize(1);  //print days and time (unique input based on alarm 1, 2 or 3)
 
-	screen.setCursor(0, 20);
-	screen.print(F("Days:"));
-	screen.setCursor(40, 20);
-	screen.print(F("SuMoTuWeThFrSa"));
+	screen_.setCursor(0, 20);
+	screen_.print(F("Days:"));
+	screen_.setCursor(40, 20);
+	screen_.print(F("SuMoTuWeThFrSa"));
 
-	screen.setCursor(0, 36);
-	screen.print(F("Time:"));
-	screen.setCursor(40, 36);
-	screen.print(F("7:00 AM"));
+	screen_.setCursor(0, 36);
+	screen_.print(F("Time:"));
+	screen_.setCursor(40, 36);
+	screen_.print(F("7:00 AM"));
 
 
-	screen.setCursor(10, 55);    //print at bottom and use inverse rectangle to select with remote input
-	screen.print(F("Preview"));
-	screen.setCursor(85, 55);
-	screen.print(F("Edit"));
-	screen.writeLine(65, 53, 65, 63, 1);
-	screen.writeLine(0, 53, 127, 53, 1);
+	screen_.setCursor(10, 55);    //print at bottom and use inverse rectangle to select with remote input
+	screen_.print(F("Preview"));
+	screen_.setCursor(85, 55);
+	screen_.print(F("Edit"));
+	screen_.writeLine(65, 53, 65, 63, 1);
+	screen_.writeLine(0, 53, 127, 53, 1);
 	
-	screen.writeFillRect(0, 54, 65, 10, 2);    //highlight preview
-	screen.writeFillRect(66, 54, 127, 10, 2);  //highlight edit
+	screen_.writeFillRect(0, 54, 65, 10, 2);    //highlight preview
+	screen_.writeFillRect(66, 54, 127, 10, 2);  //highlight edit
 
-	screen.display();
+	screen_.display();
 }
 
 void OLED::updateProgDay()
 {
-	screen.setTextSize(1);      // Normal 1:1 pixel scale
-	screen.setTextColor(WHITE); // Draw white text
-	screen.cp437(true);         // Use full 256 char 'Code Page 437' font
-	screen.setCursor(0, 0);     // Start at top-left corner
+	screen_.setTextSize(1);      // Normal 1:1 pixel scale
+	screen_.setTextColor(WHITE); // Draw white text
+	screen_.cp437(true);         // Use full 256 char 'Code Page 437' font
+	screen_.setCursor(0, 0);     // Start at top-left corner
 
 	int num = 2;
 	delay(500);
-	screen.clearDisplay();
-	screen.writeFillRect(0, 11, 128, 2, 1);
-	screen.print(F("Alarm "));
-	screen.print(num);
-	screen.print(F(" - Days"));
+	screen_.clearDisplay();
+	screen_.writeFillRect(0, 11, 128, 2, 1);
+	screen_.print(F("Alarm "));
+	screen_.print(num);
+	screen_.print(F(" - Days"));
 
-	screen.setTextSize(2);
-	screen.setCursor(15, 16);
-	screen.print(F("Mo Tu We"));
-	screen.setCursor(35, 33);
-	screen.print(F("Th Fr"));
-	screen.setCursor(35, 50);
-	screen.print(F("Sa Su"));
+	screen_.setTextSize(2);
+	screen_.setCursor(15, 16);
+	screen_.print(F("Mo Tu We"));
+	screen_.setCursor(35, 33);
+	screen_.print(F("Th Fr"));
+	screen_.setCursor(35, 50);
+	screen_.print(F("Sa Su"));
 
-	//screen.writeFillRect(10, 16, 32, 15, 2);  //Mo
-	//screen.writeFillRect(45, 16, 32, 15, 2);  //Tu
-	//screen.writeFillRect(80, 16, 32, 15, 2);  //We
-	//screen.writeFillRect(30, 32, 32, 16, 2);  //Th
-	//screen.writeFillRect(65, 32, 32, 16, 2);  //Fr
-	//screen.writeFillRect(30, 49, 32, 15, 2);  //Sa
-	//screen.writeFillRect(65, 49, 32, 15, 2);  //Su
+	//screen_.writeFillRect(10, 16, 32, 15, 2);  //Mo
+	//screen_.writeFillRect(45, 16, 32, 15, 2);  //Tu
+	//screen_.writeFillRect(80, 16, 32, 15, 2);  //We
+	//screen_.writeFillRect(30, 32, 32, 16, 2);  //Th
+	//screen_.writeFillRect(65, 32, 32, 16, 2);  //Fr
+	//screen_.writeFillRect(30, 49, 32, 15, 2);  //Sa
+	//screen_.writeFillRect(65, 49, 32, 15, 2);  //Su
 	
 	//consider empty fill box when making selection
 	//left and right movement only
 	
-	screen.display();
+	screen_.display();
 }
 
 void OLED::updateProgTime()
 {
-  screen.setTextSize(1);      // Normal 1:1 pixel scale
-  screen.setTextColor(WHITE); // Draw white text
-  screen.cp437(true);         // Use full 256 char 'Code Page 437' font
-  screen.setCursor(0, 0);     // Start at top-left corner
+  screen_.setTextSize(1);      // Normal 1:1 pixel scale
+  screen_.setTextColor(WHITE); // Draw white text
+  screen_.cp437(true);         // Use full 256 char 'Code Page 437' font
+  screen_.setCursor(0, 0);     // Start at top-left corner
 
   int num = 2;
   delay(500);
-  screen.clearDisplay();
-  screen.writeFillRect(0, 11, 128, 2, 1);
-  screen.print(F("Alarm "));
-  screen.print(num);
-  screen.print(F(" - Time"));
+  screen_.clearDisplay();
+  screen_.writeFillRect(0, 11, 128, 2, 1);
+  screen_.print(F("Alarm "));
+  screen_.print(num);
+  screen_.print(F(" - Time"));
 
-  screen.setTextSize(3);
-  screen.setCursor(17, 20);
-  screen.print(F("12:00"));
+  screen_.setTextSize(3);
+  screen_.setCursor(17, 20);
+  screen_.print(F("12:00"));
 
-  screen.setTextSize(2);
-  screen.setCursor(27, 48);
-  screen.print(F("AM  PM"));
+  screen_.setTextSize(2);
+  screen_.setCursor(27, 48);
+  screen_.print(F("AM  PM"));
 
-  //screen.writeFillRect(16, 19, 15, 25, 2);  //1
-  //screen.writeFillRect(32, 19, 20, 25, 2);  //2
-  //screen.writeFillRect(67, 19, 20, 25, 2);  //3
-  //screen.writeFillRect(88, 19, 20, 25, 2);  //4
-  //screen.writeFillRect(22, 46, 30, 17, 2);  //AM
-  //screen.writeFillRect(72, 46, 30, 17, 2);  //PM
+  //screen_.writeFillRect(16, 19, 15, 25, 2);  //1
+  //screen_.writeFillRect(32, 19, 20, 25, 2);  //2
+  //screen_.writeFillRect(67, 19, 20, 25, 2);  //3
+  //screen_.writeFillRect(88, 19, 20, 25, 2);  //4
+  //screen_.writeFillRect(22, 46, 30, 17, 2);  //AM
+  //screen_.writeFillRect(72, 46, 30, 17, 2);  //PM
 
-  screen.display();
+  screen_.display();
 }
 
 void OLED::updateProgLight()
 {
-	screen.setTextSize(1);      // Normal 1:1 pixel scale
-	screen.setTextColor(WHITE); // Draw white text
-	screen.cp437(true);         // Use full 256 char 'Code Page 437' font
-	screen.setCursor(0, 0);     // Start at top-left corner
+	screen_.setTextSize(1);      // Normal 1:1 pixel scale
+	screen_.setTextColor(WHITE); // Draw white text
+	screen_.cp437(true);         // Use full 256 char 'Code Page 437' font
+	screen_.setCursor(0, 0);     // Start at top-left corner
 
 	int num = 2;
 	delay(500);
-	screen.clearDisplay();
-	screen.writeFillRect(0, 11, 128, 2, 1);
-	screen.print(F("Alarm "));
-	screen.print(num);
-	screen.print(F(" - Time"));
+	screen_.clearDisplay();
+	screen_.writeFillRect(0, 11, 128, 2, 1);
+	screen_.print(F("Alarm "));
+	screen_.print(num);
+	screen_.print(F(" - Time"));
 
-	screen.setCursor(0, 16);
-	screen.print(F("1) Off"));
-	screen.setCursor(0, 28);
-	screen.print(F("2) Solid"));
-	screen.setCursor(0, 40);
-	screen.print(F("3) Blink"));
-	screen.setCursor(0, 52);
-	screen.print(F("4) Smooth"));
-	screen.setCursor(65, 16);
-	screen.print(F("5) FadeU"));
-	screen.setCursor(65, 28);
-	screen.print(F("6) FadeD"));
-	screen.setCursor(65, 40);
-	screen.print(F("7) Switch"));
-	screen.setCursor(65, 52);
-	screen.print(F("8) Rainbow"));
+	screen_.setCursor(0, 16);
+	screen_.print(F("1) Off"));
+	screen_.setCursor(0, 28);
+	screen_.print(F("2) Solid"));
+	screen_.setCursor(0, 40);
+	screen_.print(F("3) Blink"));
+	screen_.setCursor(0, 52);
+	screen_.print(F("4) Smooth"));
+	screen_.setCursor(65, 16);
+	screen_.print(F("5) FadeU"));
+	screen_.setCursor(65, 28);
+	screen_.print(F("6) FadeD"));
+	screen_.setCursor(65, 40);
+	screen_.print(F("7) Switch"));
+	screen_.setCursor(65, 52);
+	screen_.print(F("8) Rainbow"));
 
-	//screen.writeFillRect(0, 16, 12, 10, 2);  //1
-	//screen.writeFillRect(0, 27, 12, 10, 2);  //2
-	//screen.writeFillRect(0, 38, 12, 10, 2);  //3
-	//screen.writeFillRect(0, 50, 12, 10, 2);  //4
-	//screen.writeFillRect(64, 16, 12, 10, 2);  //5
-	//screen.writeFillRect(64, 27, 12, 10, 2);  //6
-	//screen.writeFillRect(64, 38, 12, 10, 2);  //7
-	//screen.writeFillRect(64, 50, 12, 10, 2);  //8
+	//screen_.writeFillRect(0, 16, 12, 10, 2);  //1
+	//screen_.writeFillRect(0, 27, 12, 10, 2);  //2
+	//screen_.writeFillRect(0, 38, 12, 10, 2);  //3
+	//screen_.writeFillRect(0, 50, 12, 10, 2);  //4
+	//screen_.writeFillRect(64, 16, 12, 10, 2);  //5
+	//screen_.writeFillRect(64, 27, 12, 10, 2);  //6
+	//screen_.writeFillRect(64, 38, 12, 10, 2);  //7
+	//screen_.writeFillRect(64, 50, 12, 10, 2);  //8
 
-	screen.display();
+	screen_.display();
 }
 
 void OLED::updateProgLight2()
 {
-	screen.setTextSize(2);      // Normal 1:1 pixel scale
-	screen.setTextColor(WHITE); // Draw white text
-	screen.cp437(true);         // Use full 256 char 'Code Page 437' font
-	screen.setCursor(0, 0);     // Start at top-left corner
+	screen_.setTextSize(2);      // Normal 1:1 pixel scale
+	screen_.setTextColor(WHITE); // Draw white text
+	screen_.cp437(true);         // Use full 256 char 'Code Page 437' font
+	screen_.setCursor(0, 0);     // Start at top-left corner
 
 	int num = 2;
 	delay(500);
-	screen.clearDisplay();
+	screen_.clearDisplay();
 
-	screen.setCursor(8, 20);
-	screen.print(F("< COLOR >"));
-	screen.setCursor(2, 45);
-	screen.print(F("< BRIGHT >"));
-	//screen.print(F("  BRIGHT >"));
-	//screen.print(F("< BRIGHT"));
+	screen_.setCursor(8, 20);
+	screen_.print(F("< COLOR >"));
+	screen_.setCursor(2, 45);
+	screen_.print(F("< BRIGHT >"));
+	//screen_.print(F("  BRIGHT >"));
+	//screen_.print(F("< BRIGHT"));
 
 
-	//screen.writeFillRect(0, 16, 127, 22, 2);  //color
-	//screen.writeFillRect(0, 41, 127, 22, 2);  //bright
+	//screen_.writeFillRect(0, 16, 127, 22, 2);  //color
+	//screen_.writeFillRect(0, 41, 127, 22, 2);  //bright
 
-	screen.display();
+	screen_.display();
 }
 
 void OLED::updateProgBuzzer()
 {
-	screen.setTextSize(1);      // Normal 1:1 pixel scale
-	screen.setTextColor(WHITE); // Draw white text
-	screen.cp437(true);         // Use full 256 char 'Code Page 437' font
-	screen.setCursor(0, 0);     // Start at top-left corner
+	screen_.setTextSize(1);      // Normal 1:1 pixel scale
+	screen_.setTextColor(WHITE); // Draw white text
+	screen_.cp437(true);         // Use full 256 char 'Code Page 437' font
+	screen_.setCursor(0, 0);     // Start at top-left corner
 
 	int num = 2;
 	delay(500);
-	screen.clearDisplay();
-	screen.writeFillRect(0, 11, 128, 2, 1);
-	screen.print(F("Alarm "));
-	screen.print(num);
-	screen.print(F(" - Buzzer"));
+	screen_.clearDisplay();
+	screen_.writeFillRect(0, 11, 128, 2, 1);
+	screen_.print(F("Alarm "));
+	screen_.print(num);
+	screen_.print(F(" - Buzzer"));
 
-	screen.setCursor(0, 16);
-	screen.print(F("1) Off"));
-	screen.setCursor(0, 28);
-	screen.print(F("2) Beep"));
-	screen.setCursor(0, 40);
-	screen.print(F("3) Beepx2"));
-	screen.setCursor(0, 52);
-	screen.print(F("4) Beepx3"));
+	screen_.setCursor(0, 16);
+	screen_.print(F("1) Off"));
+	screen_.setCursor(0, 28);
+	screen_.print(F("2) Beep"));
+	screen_.setCursor(0, 40);
+	screen_.print(F("3) Beepx2"));
+	screen_.setCursor(0, 52);
+	screen_.print(F("4) Beepx3"));
 
-	screen.setCursor(65, 16);
-	screen.print(F("5) Fast"));
-	screen.setCursor(65, 28);
-	screen.print(F("6) Range"));
-	screen.setCursor(65, 40);
-	screen.print(F("7) Tune 1"));
-	screen.setCursor(65, 52);
-	screen.print(F("8) Tune 2"));
+	screen_.setCursor(65, 16);
+	screen_.print(F("5) Fast"));
+	screen_.setCursor(65, 28);
+	screen_.print(F("6) Range"));
+	screen_.setCursor(65, 40);
+	screen_.print(F("7) Tune 1"));
+	screen_.setCursor(65, 52);
+	screen_.print(F("8) Tune 2"));
 
-	//screen.writeFillRect(0, 16, 12, 10, 2);  //1
-	//screen.writeFillRect(0, 27, 12, 10, 2);  //2
-	//screen.writeFillRect(0, 38, 12, 10, 2);  //3
-	//screen.writeFillRect(0, 50, 12, 10, 2);  //4
-	//screen.writeFillRect(64, 16, 12, 10, 2);  //5
-	//screen.writeFillRect(64, 27, 12, 10, 2);  //6
-	//screen.writeFillRect(64, 38, 12, 10, 2);  //7
-	//screen.writeFillRect(64, 50, 12, 10, 2);  //8
+	//screen_.writeFillRect(0, 16, 12, 10, 2);  //1
+	//screen_.writeFillRect(0, 27, 12, 10, 2);  //2
+	//screen_.writeFillRect(0, 38, 12, 10, 2);  //3
+	//screen_.writeFillRect(0, 50, 12, 10, 2);  //4
+	//screen_.writeFillRect(64, 16, 12, 10, 2);  //5
+	//screen_.writeFillRect(64, 27, 12, 10, 2);  //6
+	//screen_.writeFillRect(64, 38, 12, 10, 2);  //7
+	//screen_.writeFillRect(64, 50, 12, 10, 2);  //8
 
-	screen.display();
+	screen_.display();
 }
 
 void OLED::updateProgBuzzer2()
 {
-	screen.setTextSize(2);      // Normal 1:1 pixel scale
-	screen.setTextColor(WHITE); // Draw white text
-	screen.cp437(true);         // Use full 256 char 'Code Page 437' font
-	screen.setCursor(0, 0);     // Start at top-left corner
+	screen_.setTextSize(2);      // Normal 1:1 pixel scale
+	screen_.setTextColor(WHITE); // Draw white text
+	screen_.cp437(true);         // Use full 256 char 'Code Page 437' font
+	screen_.setCursor(0, 0);     // Start at top-left corner
 
 	int num = 2;
 	delay(500);
-	screen.clearDisplay();
+	screen_.clearDisplay();
 
-	screen.setCursor(8, 30);
-	screen.print(F("< PITCH >"));
-	//screen.print(F("  PITCH >"));
-	//screen.print(F("< PITCH"));
+	screen_.setCursor(8, 30);
+	screen_.print(F("< PITCH >"));
+	//screen_.print(F("  PITCH >"));
+	//screen_.print(F("< PITCH"));
 
-	screen.writeFillRect(0, 26, 127, 22, 2);  //color
+	screen_.writeFillRect(0, 26, 127, 22, 2);  //color
 
-	screen.display();
+	screen_.display();
 }
 
 void updateProgDate()

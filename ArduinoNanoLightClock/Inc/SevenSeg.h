@@ -9,9 +9,9 @@
 class SevenSeg
 {
 	private:
-		TM1637Display digitDisplay(CLK, DIO);
-		bool displayOn = true;
-		uint8_t brightness = 5;   //range from 1 to 7
+		TM1637Display digitDisplay_(CLK, DIO);
+		bool displayOn_ = true;
+		uint8_t brightness_ = 5;   //range from 1 to 7
 		
 	public:
 		SevenSeg();

@@ -6,14 +6,16 @@
 class RTCModule
 {
 	private:
-		RTC_DS3231 rtc;
-		char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-		DateTime now = rtc.now();
+		RTC_DS3231 rtc_;
+		char daysOfTheWeek_[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+		DateTime now_ = rtc_.now();
 		
 	public:
 		RTCModule();
 		bool findError();
 		void setTime();
+		void getDate();  //make string or char string
+		uint16_t getTime();
 };
 
 #endif

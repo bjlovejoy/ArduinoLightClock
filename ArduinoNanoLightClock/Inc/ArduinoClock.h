@@ -1,6 +1,15 @@
 #ifndef __ARDUINO_CLOCK_H
 #define __ARDUINO_CLOCK_H
 
+#include "Alarm.h"
+#include "Buzzer.h"
+#include "LED.h"
+#include "MyRemote.h"
+#include "OLED.h"
+#include "RTCModule.h"
+#include "SevenSeg.h"
+#include "TempHumidity.h"
+
 #include "TM1637Display.h"
 #include "RTClib.h"
 #include "Adafruit_GFX.h"
@@ -13,16 +22,44 @@
 #define PROGRAMMING_MODE 2
 #define ERROR_MODE 3
 
+#define NUM0 0
+#define NUM1 1
+#define NUM2 2
+#define NUM3 3
+#define NUM4 4
+#define NUM5 5
+#define NUM6 6
+#define NUM7 7
+#define NUM8 8
+#define NUM9 9
+
+#define CONFIRM 15
+#define SELECT 14
+#define PROGMODE 16
+#define LEFT 10
+#define RIGHT 12
+#define DOWN 11
+#define UP 13
+#define TIMEDOWN 11
+#define TIMEUP 13
+#define EQ 17
+#define REPT 18  //use for back button
+
 class ArduinoClock
 {
 	private:
-		uint8_t state;
-		uint8_t errorCode;
-		uint8_t pos;
-		uint16_t currentTime;
-		uint16_t currentDay;
+		uint8_t state_;
+		uint8_t errorCode_;
+		uint16_t currentTime_;
+		uint16_t currentDay_;
 		
-		bool remoteInputAvailable;
+		uint8_t pos_;
+		uint8_t next_pos_;
+		uint8_t selection_;
+		//bool remoteInputAvailable_;
+		
+		uint8_t remoteInput;
+		
 		
 		Alarm AC_alarm1;
 		Alarm AC_alarm2;

@@ -1,7 +1,7 @@
 #include <Wire.h>
 #include <SPI.h>
 
-#include "libraries/Inc/ArduinoClock.h"
+#include "Inc/ArduinoClock.h"
 
 /*
 #include "ArduinoClock.h"

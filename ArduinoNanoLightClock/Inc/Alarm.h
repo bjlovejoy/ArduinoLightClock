@@ -6,16 +6,16 @@
 class Alarm
 {
 	private:
-		bool alarmOn = false;
-		uint16_t alarmTime;  //smash hour and minutes into one (ex. 544, 1205)
-		bool alarmAM;  //true for am, false for pm
+		bool alarmOn_ = false;
+		uint16_t alarmTime_;  //smash hour and minutes into one (ex. 544, 1205)
+		bool alarmAM_;  //true for am, false for pm
 		
-		String alarmDays;  //can replace with boolean array
+		String alarmDays_;  //can replace with boolean array
 		
-		uint8_t lightColor;
-		uint8_t lightStyle;
-		uint8_t buzzerPitch;
-		uint8_t buzzerStyle;
+		uint8_t lightColor_;
+		uint8_t lightStyle_;
+		uint8_t buzzerPitch_;
+		uint8_t buzzerStyle_;
 		
 	public:
 		;

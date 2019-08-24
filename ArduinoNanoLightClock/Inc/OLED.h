@@ -13,8 +13,9 @@
 class OLED
 {
 	private:
-		Adafruit_SSD1306 screen(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-		short dir = 0;
+		Adafruit_SSD1306 screen_(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+		short dir_ = 0;
+		//uint8_t selection_ = 1;  //right now, dir_ is returned from function
 		
 	public:
 		OLED();
@@ -22,8 +23,10 @@ class OLED
 		bool findError();
 		void printLogo();
 		
+		//uint8_t getSelection();
+		
 		void updateRunning();
-		uint8_t updateProgMenu(bool);
+		uint8_t updateProgMenu(uint8_t);
 		void updateProgAlarm();
 		void updateProgDay();
 		void updateProgTime();
@@ -32,7 +35,7 @@ class OLED
 		void updateProgBuzzer();
 		void updateProgBuzzer2();
 		
-		void resetMenu();  //make up and down true and false
+		//void resetMenu();  //make up and down true and false
 		
 		void updateProgDate();
 		void updateProgNightLight();

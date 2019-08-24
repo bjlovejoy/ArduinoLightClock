@@ -20,21 +20,21 @@ ArduinoClock::ArduinoClock()
 
 void ArduinoClock::stateMachine()
 {
-	if(state == RUNNING_MODE)
+	if(state_ == RUNNING_MODE)
 	{
 		//collect time and date
 		
 		//if programming mode clicked, confirm and set this: updateProgMenu(0);
 		
-		if(AC_alarm1.alarmOn && AC_alarm1.alarmTime == currentTime)  //&& AC_alarm1.alarmDate == currentDay
+		if(AC_alarm1.alarmOn && AC_alarm1.alarmTime == currentTime_)  //&& AC_alarm1.alarmDate == currentDay_
 		{
 			;
 		}
-		else if(AC_alarm2.alarmOn && AC_alarm2.alarmTime == currentTime)
+		else if(AC_alarm2.alarmOn && AC_alarm2.alarmTime == currentTime_)
 		{
 			;
 		}
-		else if(AC_alarm3.alarmOn && AC_alarm3.alarmTime == currentTime)
+		else if(AC_alarm3.alarmOn && AC_alarm3.alarmTime == currentTime_)
 		{
 			;
 		}
@@ -42,49 +42,75 @@ void ArduinoClock::stateMachine()
 	
 //********************************************************************************************************************************************
 
-	else if(state == PROGRAMMING_MODE)
+	else if(state_ == PROGRAMMING_MODE)
 	{
-		if(pos == 0)  //print the menu selections
+		if(pos_ == 0)  //print the menu selections
 		{
 			AC_oled.updateProgMenu(1);
-			++pos;
+			pos_ = 3;
 		}
-		if(pos == 1)  //scroll through the menu and select item
+		if(pos_ == 1)  //select button pressed
 		{
-			//not the right data type, may need to do in MyRemote and pass multiple parameters by reference
-			remoteInputAvailable = AC_remote.collectInput(uint32_t & tester1234)
-			if(remoteInputAvailable)  // && tester1234 != back, confirm, number selections, etc.
+			;  //blink LED to confirm (need to move outside if statement so it can repeat until new input received)
+		}
+		if(pos_ == 2)  //confirm button pressed
+		{
+			;  //confirm (blink stops when pos_ == 1) and move to next position
+		}
+		if(pos_ == 3)  //scroll through the main menu and select item
+		{
+			if(AC_remote.determineInput())  //determine if input is available
 			{
-				AC_oled.updateProgMenu(bool(tester1234));  //for up and down arrows only
-			}
+				remoteInput = AC_remote.getInput();  //gets final input (consider merging with above function)
+				
+				if(remoteInput == UP || remoteInput == DOWN || remoteInput > NUM0 || remoteInput < NUM6)
+				{
+					selection_ = AC_oled.updateProgMenu(remoteInput);  //up
+				}
 
-			else if(tester1234 ==)  //code for back, confirm, number selections, etc.
-			{
-				;  //include else if for all other possibilities
+				else if(remoteInput == REPT)  //blink different color to go back?
+				{
+					pos_ = 0;
+				}
+				else if(remoteInput == SELECT)
+				{
+					pos = 1;
+				}
+				else if(remoteInput == CONFIRM)
+				{
+					pos = 2;  //save selections and set pos to next
+					next_pos_ = 4;
+				}
+
 			}
 		}
+		if(pos_ == 4)
+		{
+			;
+		}
+
 	}
 
 //********************************************************************************************************************************************
 
-	else if(state == STARTUP_MODE)
+	else if(state_ == STARTUP_MODE)
 	{
 		if(AC_remote.findError())
 		{
-			state = ERROR_MODE;
-			errorCode = 1;
+			state_ = ERROR_MODE;
+			errorCode_ = 1;
 			return;
 		}
 		else if(AC_OLED.findError())
 		{
-			state = ERROR_MODE;
-			errorCode = 2;
+			state_ = ERROR_MODE;
+			errorCode_ = 2;
 			return;
 		}
 		else if(AC_7seg.findError())
 		{
-			state = ERROR_MODE;
-			errorCode = 3;
+			state_ = ERROR_MODE;
+			errorCode_ = 3;
 			return;
 		}
 	}
@@ -93,7 +119,7 @@ void ArduinoClock::stateMachine()
 
 //add alarm-going-off mode
 
-	else if(state == ERROR_MODE)
+	else if(state_ == ERROR_MODE)
 	{
 		;
 	}
